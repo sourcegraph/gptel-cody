@@ -1,0 +1,99 @@
+#+title: gptel-cody: Cody backend for gptel
+
+gptel-cody is a backend for the [[https://github.com/karthink/gptel][gptel]] package, adding support for
+Sourcegraph's Cody AI assistant. It integrates seamlessly with gptel, allowing
+Emacs users to interact with Cody using the familiar gptel interface.
+
+#+BEGIN_NOTE
+This is alpha level software and is still being actively developed, tested and
+documented.
+#+END_NOTE
+
+* Features
+
+- Seamless integration with gptel
+- Support for Cody's chat capabilities
+- Automatic model selection based on Sourcegraph instance configuration
+- Streaming responses for real-time interaction
+
+* TODO Installation
+
+TODO we need to get this onto melpa first. Update
+
+gptel-cody can be installed from MELPA. First, ensure you have MELPA set up in
+your Emacs configuration. Then, you can install it using =package.el=:
+
+#+begin_src emacs-lisp
+M-x package-install RET gptel-cody RET
+#+end_src
+
+Alternatively, you can use =use-package= with =:ensure t=:
+
+#+begin_src emacs-lisp
+(use-package gptel-cody
+  :ensure t)
+#+end_src
+
+* Setup
+
+To use gptel-cody, you need to have access to a Sourcegraph instance with Cody
+enabled. You'll need to set up the backend with your Sourcegraph URL and API
+token.
+
+Add the following to your Emacs configuration:
+
+#+begin_src emacs-lisp
+(require 'gptel-cody)
+
+(gptel-make-cody "Cody"
+  :host "sourcegraph.example.com"  ; Replace with your Sourcegraph instance URL
+  :key "your-api-token")           ; Replace with your actual API token
+#+end_src
+
+* Usage
+
+Once set up, you can use gptel-cody just like any other gptel backend. Here are some common usage patterns:
+
+1. Start a new chat session:
+   #+begin_src emacs-lisp
+   M-x gptel RET Cody RET
+   #+end_src
+
+2. Send a query in any buffer:
+   #+begin_src emacs-lisp
+   M-x gptel-send
+   #+end_src
+
+3. Set Cody as the default backend:
+   #+begin_src emacs-lisp
+   (setq gptel-backend (gptel-make-cody "Cody"
+                         :host "sourcegraph.example.com"
+                         :key "your-api-token"))
+   #+end_src
+
+* TODO Configuration
+
+TODO this is all wrong
+
+gptel-cody inherits most of its configuration from gptel. However, there are a few Cody-specific options you can customize:
+
+- =gptel-cody-models=: A list of available Cody models. This is usually automatically populated based on your Sourcegraph instance's configuration.
+- =gptel-cody--client-name=: The client name used in API requests. Default is "Cody-Emacs-gptel".
+- =gptel-cody--version=: The version of the gptel-cody package.
+
+* Troubleshooting
+
+If you encounter issues:
+
+1. Ensure your Sourcegraph instance URL and API token are correct.
+2. Check that Cody is enabled on your Sourcegraph instance.
+3. Verify that your API token has the necessary permissions.
+4. Enable debug logging in gptel to see more detailed information about the requests and responses. =(setq gptel-log-level 'debug)=
+
+* Contributing
+
+Contributions to gptel-cody are welcome! Please submit issues and pull requests on the GitHub repository.
+
+* License
+
+gptel-cody is distributed under the Apache License, Version 2.0. See the LICENSE file for more details.
