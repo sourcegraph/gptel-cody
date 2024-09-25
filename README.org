@@ -97,3 +97,73 @@ Contributions to gptel-cody are welcome! Please submit issues and pull requests 
 * License
 
 gptel-cody is distributed under the Apache License, Version 2.0. See the LICENSE file for more details.
+
+* TODOs
+  :PROPERTIES:
+  :VISIBILITY: folded
+  :END:
+** TODO README is correct
+** TODO get key even if not gptel-backend
+Right now I think this is a general issue in gptel. The builtin functions for
+getting the key use gptel-backend's key, rather than the current backend.
+** TODO lazily load models
+Right now we query the sourcegraph API for the list of models on
+gptel-make-cody. We should try defer this until gptel is actually used so that
+we don't do authed network requests on emacs startup.
+** TODO handle empty text
+
+I don't know if this is a bug in gptel or strictness on Cody's side. But I set
+a directive without having inline prose, and we ended up having a final bit of
+the transcript being
+
+#+begin_example
+    {
+      "speaker": "human",
+      "text": ""
+    }
+#+end_example
+
+This lead to a failure from the server.
+** TODO enhanced context for enterprise
+Already have a branch for this. The API is straightforward to support.
+However, there are plans to move enhanced context to be fully behind the
+simple API (ie the server parses things like repo mentions).
+
+Goal is to extend transient menu to have an option to add enhanced context. I
+believe the simple approach is to translate the remote context into the local
+files. An alternative is to have a grep/rg/occur like buffer of the results
+and then and that to the context.
+** TODO handle errors from backend
+Battle test this a bit further to ensure we nicely report errors when they
+happen. EG invalid access token
+** TODO remote prompts
+
+Sourcegraph has an API to get prompts from your enterprise instance. We should
+provide a way to optionally sync them.
+
+#+begin_src graphql
+  query ViewerPrompts($query: String!) {
+      prompts(query: $query, first: 100, viewerIsAffiliated: true, orderBy: PROMPT_NAME_WITH_OWNER) {
+          nodes {
+              id
+              name
+              nameWithOwner
+              owner {
+                  namespaceName
+              }
+              description
+              draft
+              definition {
+                  text
+              }
+              url
+          }
+          totalCount
+          pageInfo {
+              hasNextPage
+              endCursor
+          }
+      }
+  }
+#+end_src
+
