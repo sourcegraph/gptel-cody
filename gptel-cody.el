@@ -173,7 +173,7 @@ function that returns the key."
                   :key key
                   :models (or models (if (string= host "sourcegraph.com")
                                          '("anthropic/claude-3-5-sonnet-20240620")
-                                       '("anthropic::2023-06-01::claude-3.5-sonnet")))
+                                       '("anthropic::2024-10-22::claude-3-5-sonnet-latest")))
                   :protocol protocol
                   :endpoint endpoint
                   :stream stream
