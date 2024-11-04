@@ -177,7 +177,7 @@ function that returns the key."
                   :protocol protocol
                   :endpoint endpoint
                   :stream stream
-                  :url (concat protocol "://" host endpoint "?api-version=2&client-name=" gptel-cody--client-name "&client-version=" gptel-cody--version))))
+                  :url (concat protocol "://" host endpoint "?api-version=5&client-name=" gptel-cody--client-name "&client-version=" gptel-cody--version))))
     ;; using default models, so fetch from remote.
     (unless models (gptel-cody-fetch-models-async backend))
     (setf (alist-get name gptel--known-backends
