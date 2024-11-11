@@ -58,7 +58,7 @@
                               all-models))
                 (chat-models-names (mapcar (lambda (model) (cdr (assoc 'modelRef model))) chat-models))
                 (chat-models-names (cons default-chat-model (remove default-chat-model chat-models-names))))
-           (setf (gptel-cody-models backend) chat-models-names)
+           (setf (gptel-cody-models backend) (gptel--process-models chat-models-names))
            (message "Updated %s models: %s" (gptel-backend-name backend) chat-models-names))))
      nil t t)))
 
@@ -80,7 +80,7 @@
 
 (cl-defmethod gptel--request-data ((_backend gptel-cody) prompts)
   "Prepare REQUEST-DATA for Cody API."
-  `(:model ,gptel-model
+  `(:model ,(gptel--model-name gptel-model)
     :messages ,(vconcat prompts)
     :maxTokensToSample ,(or gptel-max-tokens 4000)
     :temperature ,(or gptel-temperature 0)
@@ -171,9 +171,10 @@ function that returns the key."
                   :host host
                   :header header
                   :key key
-                  :models (or models (if (string= host "sourcegraph.com")
-                                         '("anthropic/claude-3-5-sonnet-20240620")
-                                       '("anthropic::2024-10-22::claude-3-5-sonnet-latest")))
+                  :models (gptel--process-models
+                           (or models (if (string= host "sourcegraph.com")
+                                          '(anthropic/claude-3-5-sonnet-20240620)
+                                        '(anthropic::2024-10-22::claude-3-5-sonnet-latest))))
                   :protocol protocol
                   :endpoint endpoint
                   :stream stream
